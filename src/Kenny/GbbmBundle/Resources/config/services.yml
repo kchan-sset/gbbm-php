@@ -1,0 +1,7 @@
+parameters:
+#    kenny_gbbm.example.class: Kenny\GbbmBundle\Example
+
+services:
+#    kenny_gbbm.example:
+#        class: %kenny_gbbm.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

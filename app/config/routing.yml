@@ -1,0 +1,4 @@
+kenny_gbbm:
+    resource: "@KennyGbbmBundle/Resources/config/routing.yml"
+    prefix:   /
+
