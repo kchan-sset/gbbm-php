@@ -5,3 +5,7 @@ services:
 #    kenny_gbbm.example:
 #        class: %kenny_gbbm.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+pairing_service:
+  class: Kenny\KennyGbbmBundle\Service\Pairing
+  arguments:
+      - "@service_container"
