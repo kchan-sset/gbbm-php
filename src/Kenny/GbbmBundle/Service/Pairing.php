@@ -11,13 +11,15 @@ class Pairing
     const TYPE_2 = 'Terms';
     const TYPE_3 = 'Featured';
 
-    public $beer;
-    public $movie;
-    public $type;
-    public $meta;
-    public $bIds;
-    public $mIds;
-    public $nfData;
+
+    private $em;
+    private $container;
+
+    public function __construct($em, $container)
+    {
+        $this->em = $em;
+        $this->container = $container;
+    }
 
     /**
      * Function to randomly determine which Randomizer method to use to create a pairing
@@ -25,27 +27,17 @@ class Pairing
      * @param array $mIds [optional] Array of movie ids
      * @return Randomizer
      */
-    public static function pickOne(array $bIds = null, array $mIds = null)
+    public function pickOne()
     {
         $defaultTest = rand(1,self::METHOD_RATE);
         $method = ($defaultTest == self::METHOD_RATE) ? rand(1,self::METHOD_MAX) : 'Default';
-        $return = new self($bIds, $mIds);
-        call_user_func(array($return,'method'.$method));
-        $return->nfData = Netflix::catalogDetail($return->movie->nfid);
-        return $return;
+        $methodName = 'method'.$method;
+
+        //TODO:implement Netflix
+//        $return->nfData = Netflix::catalogDetail($return->movie->nfid);
+        return $this->$methodName();
     }
 
-    /**
-     * Constructor
-     * @param array $bIds [optional] Array of beer ids
-     * @param array $mIds [optional] Array of movie ids
-     * @return void
-     */
-    public function __construct(array $bIds = null, array $mIds = null)
-    {
-        $this->bIds = $bIds ? $bIds : array();
-        $this->mIds = $mIds ? $mIds : array();
-    }
 
     /**
      * Default Randomizer method -- Slot Machine Mode
@@ -53,6 +45,8 @@ class Pairing
      */
     public function methodDefault()
     {
+        $movieList = $this->em->getRepository('KennyGbbmBundle:Movie')->findAll();
+        
         $this->movie = self::getRandomModel('Movie', Doctrine::getTable('Movie')->getExclusionQuery($this->mIds));
         $this->beer = self::getRandomModel('Beer', Doctrine::getTable('Beer')->getExclusionQuery($this->bIds));
         $this->type = self::TYPE_DEFAULT;

@@ -8,4 +8,5 @@ services:
 pairing_service:
   class: Kenny\KennyGbbmBundle\Service\Pairing
   arguments:
+      - "@doctrine.orm.entity_manager"
       - "@service_container"
